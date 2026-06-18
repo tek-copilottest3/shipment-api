@@ -30,7 +30,10 @@ def get_status(shipment_id: str):
     return {"shipment_id": shipment_id, "status": SHIPMENT_STORE[shipment_id]}
 
 
-# TODO: Add POST /shipments endpoint here.
-# - Accept a ShipmentRequest body (shipment_id and status).
-# - If shipment_id already exists in SHIPMENT_STORE, return HTTP 409.
-# - On success, add to SHIPMENT_STORE and return the created shipment with HTTP 201.
+@app.post("/shipments", status_code=201)
+def create_shipment(request: ShipmentRequest):
+    if request.shipment_id in SHIPMENT_STORE:
+        raise HTTPException(status_code=409, detail="Shipment already exists")
+
+    SHIPMENT_STORE[request.shipment_id] = request.status
+    return {"shipment_id": request.shipment_id, "status": request.status}
