@@ -37,3 +37,11 @@ def create_shipment(request: ShipmentRequest):
 
     SHIPMENT_STORE[request.shipment_id] = request.status
     return {"shipment_id": request.shipment_id, "status": request.status}
+
+
+@app.get("/shipments")
+def list_shipments():
+    return [
+        {"shipment_id": shipment_id, "status": status}
+        for shipment_id, status in SHIPMENT_STORE.items()
+    ]
